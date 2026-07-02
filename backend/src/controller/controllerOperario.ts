@@ -16,7 +16,7 @@ export const Operario = {
         const senhaComHash = await senhaHash(senha)
 
         try {
-            const queryTexto = `
+            const queryTexto: string = `
             INSERT INTO operario (nome, cpf, email, senha_hash, admin_bool)
             VALUES ($1, $2, $3, $4, $5)
             RETURNING *`;
@@ -34,7 +34,7 @@ export const Operario = {
 
     async read(req: Request, res: Response) {
         try {
-            const queryTexto = `
+            const queryTexto: string = `
             SELECT * FROM operario`;
 
             const resultado = await pool.query(queryTexto);
@@ -56,7 +56,7 @@ export const Operario = {
         const cpf_operario: string = req.body.cpf_operario
 
         try {
-            const queryTexto = `
+            const queryTexto: string = `
             UPDATE operario
             SET ${coluna} = $1
             WHERE cpf = $2
@@ -78,7 +78,7 @@ export const Operario = {
         
         const cpf_operario: string = req.body.cpf_operario
         try {
-            const queryTexto = `
+            const queryTexto: string = `
             DELETE FROM operario
             WHERE cpf = $1
             RETURNING *`;

@@ -3,25 +3,25 @@ import pool from "../database/database.js"
 import senhaHash from "../password/password.js";
 
 export const Condomino = {
-    async create(req:Request<{},{}, {lote: string; nome: string; cpf: string; numero: string; senha: string}>, res:Response) {
+    async create(req:Request<{},{}, {lote: string; nome: string; cpf: string; telefone: string; senha: string}>, res:Response) {
         
         console.log(req.body)
         
         const lote: string = req.body.lote
         const nome: string = req.body.nome
         const cpf: string = req.body.cpf
-        const numero: string = req.body.numero
+        const telefone: string = req.body.telefone
         const senha: string = req.body.senha
 
         const senhaComHash = await senhaHash(senha)
 
         try {
-            const queryTexto = `
-            INSERT INTO condomino (lote, nome, cpf, numero, senha_hash)
+            const queryTexto: string = `
+            INSERT INTO condomino (lote, nome, cpf, telefone, senha_hash)
             VALUES ($1, $2, $3, $4, $5)
             RETURNING *`
             
-            const resultado = await pool.query(queryTexto, [lote, nome, cpf, numero, senhaComHash]);
+            const resultado = await pool.query(queryTexto, [lote, nome, cpf, telefone, senhaComHash]);
             const novoOperario = resultado.rows[0];
 
             return res.status(200).json(novoOperario);
@@ -33,7 +33,7 @@ export const Condomino = {
     },
     async read(req: Request, res: Response) {
         try {
-            const queryTexto = `
+            const queryTexto: string = `
             SELECT * FROM condomino`;
 
             const resultado = await pool.query(queryTexto);
@@ -54,7 +54,7 @@ export const Condomino = {
         const cpf_condomino: string = req.body.cpf_condomino
 
         try {
-            const queryTexto = `
+            const queryTexto: string = `
             UPDATE condomino
             SET ${coluna} = $1
             WHERE cpf = $2
@@ -75,7 +75,7 @@ export const Condomino = {
         
         const cpf_condomino: string = req.body.cpf_condomino
         try {
-            const queryTexto = `
+            const queryTexto: string = `
             DELETE FROM condomino
             WHERE cpf = $1
             RETURNING *`;
