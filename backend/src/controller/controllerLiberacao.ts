@@ -11,5 +11,5 @@ export const liberacao = {
             nome_visitante, cpf_visitante, placa_visitante,)
             `
         }
-    }
-}
+    },
+};

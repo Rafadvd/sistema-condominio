@@ -12,7 +12,6 @@ export const Condomino = {
         const cpf: string = req.body.cpf
         const telefone: string = req.body.telefone
         const senha: string = req.body.senha
-
         const senhaComHash = await senhaHash(senha)
 
         try {
