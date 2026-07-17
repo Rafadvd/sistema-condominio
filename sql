@@ -33,11 +33,14 @@ placa_visitante VARCHAR(20),
 --Status
 data_hora_criacao TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
 data_hora_expiracao TIMESTAMP not null,
-status_entrada BOOLEAN not null DEFAULT FALSE,
+status_entrada BOOLEAN not null DEFAULT 'PENDENTE',
 data_hora_entrada TIMESTAMP,
 data_hora_saida TIMESTAMP,
 --Ligação com outras tabelas
 CONSTRAINT fk_liberacao_condominio FOREIGN KEY (id_condomino) REFERENCES condomino(id),
 CONSTRAINT fk_liberacao_operario_entrada FOREIGN KEY (id_operario_entrada) REFERENCES operario(id),
 CONSTRAINT fk_liberacao_operario_saida FOREIGN KEY (id_operario_saida) REFERENCES operario(id),
+--Validaçẽos
+CONSTRAINT chk_data_expiracao CHECK (data_hora_expiracao > data_hora_criacao),
+CONSTRAINT chk_status_entrada CHECK (status_entrada IN ('PENDENTE', 'EM_VISITA', 'CONCLUIDA', 'EXPIRADA', 'CANCELADA'))
 );

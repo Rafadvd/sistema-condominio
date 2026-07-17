@@ -2,6 +2,8 @@ import type { Request, Response } from "express";
 import pool from "../database/database.js"
 import senhaHash from "../password/password.js";
 
+//CRUD dos condominos
+
 export const Condomino = {
     async create(req:Request<{},{}, {lote: string; nome: string; cpf: string; telefone: string; senha: string}>, res:Response) {
         
@@ -23,7 +25,7 @@ export const Condomino = {
             const resultado = await pool.query(queryTexto, [lote, nome, cpf, telefone, senhaComHash]);
             const novoOperario = resultado.rows[0];
 
-            return res.status(200).json(novoOperario);
+            return res.status(201).json(novoOperario);
         } catch (erro) {
             console.error(erro);
 
