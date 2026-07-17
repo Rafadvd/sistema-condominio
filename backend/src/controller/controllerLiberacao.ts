@@ -5,7 +5,7 @@ import { Query } from "pg";
 
 //CRUD das requisições de liberação
 
-export const liberacao = {
+export const Liberacao = {
     async create(req: Request<{},{}, { 
         id_condomino: number; tipo_visitante: string; 
         nome_visitante: string; cpf_visitante: string;
