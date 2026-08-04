@@ -33,7 +33,7 @@ placa_visitante VARCHAR(20),
 --Status
 data_hora_criacao TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
 data_hora_expiracao TIMESTAMP not null,
-status_entrada BOOLEAN not null DEFAULT 'PENDENTE',
+status_entrada VARCHAR(30) not null DEFAULT 'PENDENTE',
 data_hora_entrada TIMESTAMP,
 data_hora_saida TIMESTAMP,
 --Ligação com outras tabelas
