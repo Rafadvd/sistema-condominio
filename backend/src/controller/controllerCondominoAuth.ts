@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import pool from "../database/database.js"
 import senhaHash from "../password/password.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 //login e devolver JWT
 
@@ -21,19 +22,25 @@ export const Login = {
 
             if (!condomino) {
                 return res.status(401).json({ error: "CPF ou senha incorretos "});
-
+            }
             const senhaValida = await bcrypt.compare(senha, condomino.senha_hash);
 
             if (!senhaValida) {
-                res.status(401).json({ error: "CPF ou senha incorretos"});
+                return res.status(401).json({ error: "CPF ou senha incorretos"});
             }
 
+            const secret = process.env.JWT_SECRET || "sua_chave_secreta_padrao";
+
+            const token = jwt.sign({}, secret, {
+                subject: String(condomino.id),
+                expiresIn: "1d"
+            })
+
             return res.json({ message: "Login realizado com sucesso" });
-            }
-        } catch (erro) {
+            } catch (erro) {
             console.error(erro);
 
             return res.status(500).json({ mensage: "Erro interno no login "})
-        }
-    },
+        } 
+     }
 }
