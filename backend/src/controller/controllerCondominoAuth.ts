@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 
 //login e devolver JWT
 
-export const Login = {
+export const LoginCondomino = {
     async post(req:Request<{},{}, {cpf: string; senha: string}>, res:Response) {
 
         console.log(req.body);
@@ -29,7 +29,11 @@ export const Login = {
                 return res.status(401).json({ error: "CPF ou senha incorretos"});
             }
 
-            const secret = process.env.JWT_SECRET || "sua_chave_secreta_padrao";
+            const secret = process.env.JWT_SECRET;
+
+            if (!secret) {
+                throw new Error("JWT não está definido")
+            }
 
             const token = jwt.sign({}, secret, {
                 subject: String(condomino.id),

@@ -19,7 +19,12 @@ export function ensureAuthenticated(req: Request,res: Response,next: NextFunctio
   }
 
   try {
-    const secret = process.env.JWT_SECRET || 'sua_chave_secreta_padrao';
+    const secret = process.env.JWT_SECRET;
+
+    if (!secret) {
+      throw new Error("JWT não está definido")
+    }
+    
     const decoded = jwt.verify(token, secret) as IPayload;
 
     req.userID = decoded.sub;

@@ -1,5 +1,6 @@
 import express from "express";
-import rotas from "./routes/routes.js"
+import rotas from "./routes/routes.js";
+import "dotenv/config";
 
 const app = express();
 
