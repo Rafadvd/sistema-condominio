@@ -1,8 +1,16 @@
+import "dotenv/config";
 import express from "express";
 import rotas from "./routes/routes.js";
-import "dotenv/config";
+import cors from "cors";
 
 const app = express();
+
+app.use(
+  cors({
+    orgin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
 
 app.use(express.json());
 
@@ -14,8 +22,8 @@ declare global {
       userID?: string;
     }
   }
-};
+}
 
-app.listen(8080, () => {
-    console.log("ON")
+app.listen(process.env.PORT, () => {
+  console.log("ON");
 });
