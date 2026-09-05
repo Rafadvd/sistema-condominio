@@ -3,7 +3,7 @@ import BackGround from "../components/BackGround";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function LoginOperario() {
+function LoginCondomino() {
   const [cpf, setCpf] = useState("");
   const [senha, setSenha] = useState("");
   const [erroGeral, setErroGeral] = useState("");
@@ -26,7 +26,7 @@ function LoginOperario() {
     setErroGeral("");
 
     try {
-      const response = await fetch("http://localhost:8080/api/loginOperario", {
+      const response = await fetch("http://localhost:8080/api/loginCondomino", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dados),
@@ -47,7 +47,7 @@ function LoginOperario() {
       }
 
       localStorage.setItem("token", token);
-      navigate("/");
+      navigate("/condomino");
     } catch {
       setErroGeral("Não foi possível conectar ao servidor.");
     } finally {
@@ -62,15 +62,19 @@ function LoginOperario() {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden">
-      <BackGround />
+      <BackGround variant="blue" />
 
-      <div className="relative w-full max-w-sm rounded-2xl bg-[#f4f3ef] px-10 pb-12 pt-10 shadow-2xl">
-        <img className="mx-auto h-40 pb-2" src="../../public/logo.png" alt="Logo" />
-        <h1 className="flex justify-center pb-2 text-3xl font-bold text-[#2d0a4e]">
+      <div className="relative w-full max-w-sm rounded-2xl border border-blue-100 bg-[#f0f7ff] px-10 pb-12 pt-10 shadow-2xl shadow-blue-900/20">
+        <img className="mx-auto h-32 pb-2" src="../../public/logo.png" alt="Logo" />
+
+        <p className="mb-1 flex justify-center text-xs font-semibold uppercase tracking-widest text-blue-600">
+          Área do condômino
+        </p>
+        <h1 className="flex justify-center pb-2 text-3xl font-bold text-[#0c2d6b]">
           Bem-vindo de volta
         </h1>
-        <p className="flex justify-center pb-6 text-gray-700">
-          Acesse sua conta para continuar
+        <p className="flex justify-center pb-6 text-gray-600">
+          Acesse sua conta para gerenciar visitas
         </p>
 
         {erroGeral && (
@@ -84,13 +88,13 @@ function LoginOperario() {
         )}
 
         <div className="flex w-full flex-col gap-1">
-          <label htmlFor="cpf" className="pb-2 text-sm font-medium text-[#2d0a4e]">
+          <label htmlFor="cpf-condomino" className="pb-2 text-sm font-medium text-[#0c2d6b]">
             CPF
           </label>
           <div className="relative">
             <input
               type="text"
-              id="cpf"
+              id="cpf-condomino"
               placeholder=" "
               value={cpf}
               onChange={(event) => {
@@ -103,14 +107,14 @@ function LoginOperario() {
               className={`peer w-full rounded-lg border bg-white px-3 py-2.5 text-sm text-gray-900 transition-colors placeholder:text-transparent focus:outline-none focus:ring-2 ${
                 errosCampos.cpf
                   ? "border-red-400 focus:border-red-500 focus:ring-red-500/20"
-                  : "border-gray-300 focus:border-purple-500 focus:ring-purple-500/20"
+                  : "border-blue-200 focus:border-blue-500 focus:ring-blue-500/20"
               }`}
             />
             <label
-              htmlFor="cpf"
+              htmlFor="cpf-condomino"
               className="pointer-events-none absolute left-3 top-1/2 flex origin-left -translate-y-1/2 select-none items-center gap-2 text-sm text-gray-400 transition-all duration-200 peer-focus:invisible peer-focus:scale-95 peer-focus:opacity-0 peer-[:not(:placeholder-shown)]:invisible peer-[:not(:placeholder-shown)]:scale-95 peer-[:not(:placeholder-shown)]:opacity-0"
             >
-              <User className="h-4 w-4 shrink-0" />
+              <User className="h-4 w-4 shrink-0 text-blue-400" />
               <span>CPF</span>
             </label>
           </div>
@@ -120,13 +124,13 @@ function LoginOperario() {
         </div>
 
         <div className="flex w-full flex-col gap-1 pt-4">
-          <label htmlFor="senha" className="pb-2 text-sm font-medium text-[#2d0a4e]">
+          <label htmlFor="senha-condomino" className="pb-2 text-sm font-medium text-[#0c2d6b]">
             Senha
           </label>
           <div className="relative">
             <input
               type="password"
-              id="senha"
+              id="senha-condomino"
               placeholder=" "
               value={senha}
               onChange={(event) => {
@@ -139,14 +143,14 @@ function LoginOperario() {
               className={`peer w-full rounded-lg border bg-white px-3 py-2.5 text-sm text-gray-900 transition-colors placeholder:text-transparent focus:outline-none focus:ring-2 ${
                 errosCampos.senha
                   ? "border-red-400 focus:border-red-500 focus:ring-red-500/20"
-                  : "border-gray-300 focus:border-purple-500 focus:ring-purple-500/20"
+                  : "border-blue-200 focus:border-blue-500 focus:ring-blue-500/20"
               }`}
             />
             <label
-              htmlFor="senha"
+              htmlFor="senha-condomino"
               className="pointer-events-none absolute left-3 top-1/2 flex origin-left -translate-y-1/2 select-none items-center gap-2 text-sm text-gray-400 transition-all duration-200 peer-focus:invisible peer-focus:scale-95 peer-focus:opacity-0 peer-[:not(:placeholder-shown)]:invisible peer-[:not(:placeholder-shown)]:scale-95 peer-[:not(:placeholder-shown)]:opacity-0"
             >
-              <Lock className="h-4 w-4 shrink-0" />
+              <Lock className="h-4 w-4 shrink-0 text-blue-400" />
               <span>********</span>
             </label>
           </div>
@@ -159,7 +163,7 @@ function LoginOperario() {
           <button
             type="button"
             disabled={carregando}
-            className="flex w-full justify-center rounded-lg bg-gradient-to-r from-[#c507ff] to-[#6200e2] px-4 py-2.5 font-medium text-white transition-transform active:scale-95 disabled:cursor-not-allowed disabled:opacity-70"
+            className="flex w-full justify-center rounded-lg bg-gradient-to-r from-sky-500 to-blue-700 px-4 py-2.5 font-medium text-white shadow-md shadow-blue-600/30 transition-transform active:scale-95 hover:from-sky-400 hover:to-blue-600 disabled:cursor-not-allowed disabled:opacity-70"
             onClick={handleSubmit}
           >
             {carregando ? "Entrando..." : "Entrar"}
@@ -170,4 +174,4 @@ function LoginOperario() {
   );
 }
 
-export default LoginOperario;
+export default LoginCondomino;

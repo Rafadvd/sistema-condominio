@@ -9,20 +9,20 @@ import { lookupService } from "node:dns";
 
 const rotas = Router();
 
-rotas.post("/api/operario", Operario.create);
-rotas.get("/api/operario", Operario.read);
-rotas.put("/api/operario", Operario.update);
-rotas.delete("/api/operario", Operario.delete);
+rotas.post("/api/operario", ensureAuthenticated, Operario.create);
+rotas.get("/api/operario", ensureAuthenticated, Operario.read);
+rotas.put("/api/operario", ensureAuthenticated, Operario.update);
+rotas.delete("/api/operario", ensureAuthenticated, Operario.delete);
 
-rotas.post("/api/condomino", Condomino.create);
-rotas.get("/api/condomino", Condomino.read);
-rotas.put("/api/condomino", Condomino.update);
-rotas.delete("/api/condomino", Condomino.delete);
+rotas.post("/api/condomino", ensureAuthenticated, Condomino.create);
+rotas.get("/api/condomino", ensureAuthenticated, Condomino.read);
+rotas.put("/api/condomino", ensureAuthenticated, Condomino.update);
+rotas.delete("/api/condomino", ensureAuthenticated, Condomino.delete);
 
-rotas.post("/api/liberacao", Liberacao.create);
-rotas.get("/api/liberacao", Liberacao.read);
-rotas.put("/api/liberacao", Liberacao.update);
-rotas.delete("/api/liberacao", Liberacao.delete);
+rotas.post("/api/liberacao", ensureAuthenticated, Liberacao.create);
+rotas.get("/api/liberacao", ensureAuthenticated, Liberacao.read);
+rotas.put("/api/liberacao", ensureAuthenticated, Liberacao.update);
+rotas.delete("/api/liberacao", ensureAuthenticated, Liberacao.delete);
 
 rotas.post("/api/loginOperario", LoginOperario.post);
 rotas.post("/api/loginCondomino", LoginCondomino.post);

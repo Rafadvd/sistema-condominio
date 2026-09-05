@@ -9,8 +9,6 @@ import jwt from "jsonwebtoken";
 export const LoginCondomino = {
     async post(req:Request<{},{}, {cpf: string; senha: string}>, res:Response) {
 
-        console.log(req.body);
-
         const cpf: string = req.body.cpf;
         const senha: string = req.body.senha;
 
@@ -40,7 +38,10 @@ export const LoginCondomino = {
                 expiresIn: "1d"
             })
 
-            return res.json({ message: "Login realizado com sucesso" });
+            return res.json({
+                message: "Login realizado com sucesso",
+                token: token
+            });
             } catch (erro) {
             console.error(erro);
 
