@@ -57,28 +57,67 @@ export const Liberacao = {
         }
     },
 
-    async update(req: Request<{}, {}, {coluna: string; valor: string; id: string}>, res: Response) {
+    async update(req: Request<{}, {}, { id: number; acao: string }>, res: Response) {
+        const id: number = req.body.id;
+        const acao: string = req.body.acao;
+        const idOperario = req.userID;
 
-        console.log(req.body)
+        const acoes: Record<string, { status: string; sql: string }> = {
+            entrada: {
+                status: "EM_VISITA",
+                sql: `
+                    UPDATE liberacao
+                    SET status_entrada = 'EM_VISITA',
+                        data_hora_entrada = CURRENT_TIMESTAMP,
+                        id_operario_entrada = $1
+                    WHERE id = $2 AND status_entrada = 'PENDENTE'
+                    RETURNING *`,
+            },
+            cancelar: {
+                status: "CANCELADA",
+                sql: `
+                    UPDATE liberacao
+                    SET status_entrada = 'CANCELADA'
+                    WHERE id = $1 AND status_entrada = 'PENDENTE'
+                    RETURNING *`,
+            },
+            saida: {
+                status: "CONCLUIDA",
+                sql: `
+                    UPDATE liberacao
+                    SET status_entrada = 'CONCLUIDA',
+                        data_hora_saida = CURRENT_TIMESTAMP,
+                        id_operario_saida = $1
+                    WHERE id = $2 AND status_entrada = 'EM_VISITA'
+                    RETURNING *`,
+            },
+        };
 
-        const coluna: string = req.body.coluna
-        const valor: string = req.body.valor
-        const id: string = req.body.id
+        const config = acoes[acao];
+
+        if (!config) {
+            return res.status(400).json({ mensage: "Ação inválida" });
+        }
 
         try {
-            const queryTexto: string = `
-            UPDATE operario
-            SET ${coluna} = $1
-            WHERE id = $2
-            RETURNING *`;
+            const params =
+                acao === "cancelar"
+                    ? [id]
+                    : [idOperario, id];
 
-            const resultado = await pool.query(queryTexto, [valor, id]);
-            
+            const resultado = await pool.query(config.sql, params);
+
+            if (resultado.rows.length === 0) {
+                return res.status(400).json({
+                    mensage: "Não foi possível atualizar esta liberação no status atual",
+                });
+            }
+
             return res.status(200).json(resultado.rows[0]);
         } catch (erro) {
             console.error(erro);
 
-            return res.status(500).json({ mensage: "Erro interno ao modificar tabela"})
+            return res.status(500).json({ mensage: "Erro interno ao modificar liberação" });
         }
     },
 

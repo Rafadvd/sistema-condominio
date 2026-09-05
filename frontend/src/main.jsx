@@ -5,6 +5,8 @@ import LoginOperario from "./pages/LoginOperario.jsx";
 import Central from "./pages/CentralOperario.jsx";
 import CentralCondomino from "./pages/CentralCondomino.jsx";
 import Condominos from "./pages/Condominos.jsx";
+import Operarios from "./pages/Operarios.jsx";
+import Historico from "./pages/Historico.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import LoginCondomino from "./pages/LoginCondomino.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -23,6 +25,22 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute redirectTo="/loginOperario">
         <Condominos />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/operarios",
+    element: (
+      <ProtectedRoute redirectTo="/loginOperario">
+        <Operarios />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/historico",
+    element: (
+      <ProtectedRoute redirectTo="/loginOperario">
+        <Historico />
       </ProtectedRoute>
     ),
   },

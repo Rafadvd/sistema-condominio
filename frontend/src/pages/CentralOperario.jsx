@@ -1,6 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { Clock, User, Car, ShieldCheck, CalendarClock } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import {
+  Clock,
+  User,
+  Car,
+  ShieldCheck,
+  CalendarClock,
+  LogIn,
+  LogOut,
+  XCircle,
+} from "lucide-react";
 import NavBar from "../components/NavBar";
+
+const STATUS_ATIVOS = ["PENDENTE", "EM_VISITA"];
 
 const STATUS_CONFIG = {
   PENDENTE: {
@@ -41,13 +52,62 @@ function formatarData(data) {
   });
 }
 
+function AcoesLiberacao({ liberacao, onAtualizar, atualizando }) {
+  const status = liberacao.status_entrada;
+
+  if (status === "PENDENTE") {
+    return (
+      <div className="mt-4 flex flex-wrap gap-2 border-t border-purple-50 pt-4">
+        <button
+          type="button"
+          disabled={atualizando}
+          onClick={() => onAtualizar(liberacao.id, "entrada")}
+          className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-violet-600 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-60 sm:flex-none"
+        >
+          <LogIn className="h-3.5 w-3.5" />
+          {atualizando ? "..." : "Entrou"}
+        </button>
+        <button
+          type="button"
+          disabled={atualizando}
+          onClick={() => onAtualizar(liberacao.id, "cancelar")}
+          className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs font-medium text-red-700 transition-colors hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-60 sm:flex-none"
+        >
+          <XCircle className="h-3.5 w-3.5" />
+          {atualizando ? "..." : "Cancelar"}
+        </button>
+      </div>
+    );
+  }
+
+  if (status === "EM_VISITA") {
+    return (
+      <div className="mt-4 border-t border-purple-50 pt-4">
+        <button
+          type="button"
+          disabled={atualizando}
+          onClick={() => onAtualizar(liberacao.id, "saida")}
+          className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+        >
+          <LogOut className="h-3.5 w-3.5" />
+          {atualizando ? "..." : "Já saiu"}
+        </button>
+      </div>
+    );
+  }
+
+  return null;
+}
+
 export default function Central() {
   const [items, setItems] = useState([]);
   const [carregando, setCarregando] = useState(true);
+  const [atualizandoId, setAtualizandoId] = useState(null);
+  const [erroAcao, setErroAcao] = useState("");
 
   const token = localStorage.getItem("token");
 
-  async function api_liberacao() {
+  const api_liberacao = useCallback(async () => {
     try {
       const response = await fetch("http://localhost:8080/api/liberacao", {
         method: "GET",
@@ -61,23 +121,59 @@ export default function Central() {
       }
 
       const dados_resposta = await response.json();
-      return Array.isArray(dados_resposta) ? dados_resposta : [];
+      const lista = Array.isArray(dados_resposta) ? dados_resposta : [];
+      return lista.filter((l) => STATUS_ATIVOS.includes(l.status_entrada));
     } catch (erro) {
       console.error("Falha na requisição:", erro);
       return [];
     }
+  }, [token]);
+
+  async function carregar() {
+    setCarregando(true);
+    const dados = await api_liberacao();
+    setItems(dados);
+    setCarregando(false);
   }
 
   useEffect(() => {
-    async function carregar() {
-      setCarregando(true);
-      const dados = await api_liberacao();
-      setItems(dados);
-      setCarregando(false);
-    }
-
     carregar();
-  }, []);
+  }, [api_liberacao]);
+
+  async function atualizarStatus(id, acao) {
+    setAtualizandoId(id);
+    setErroAcao("");
+
+    try {
+      const response = await fetch("http://localhost:8080/api/liberacao", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ id, acao }),
+      });
+
+      const dados = await response.json();
+
+      if (!response.ok) {
+        setErroAcao(dados.mensage || "Não foi possível atualizar a liberação.");
+        return;
+      }
+
+      if (!STATUS_ATIVOS.includes(dados.status_entrada)) {
+        setItems((prev) => prev.filter((item) => item.id !== id));
+      } else {
+        setItems((prev) =>
+          prev.map((item) => (item.id === id ? dados : item))
+        );
+      }
+    } catch {
+      setErroAcao("Não foi possível conectar ao servidor.");
+    } finally {
+      setAtualizandoId(null);
+    }
+  }
 
   const pendentes = items.filter((l) => l.status_entrada === "PENDENTE").length;
   const emVisita = items.filter((l) => l.status_entrada === "EM_VISITA").length;
@@ -87,7 +183,7 @@ export default function Central() {
       <NavBar />
 
       <main className="flex-1 p-4 pt-16 md:ml-64 md:p-8 md:pt-8">
-        <header className="mb-8 rounded-2xl bg-white border border-purple-100 p-6 shadow-sm shadow-purple-100/60">
+        <header className="mb-8 rounded-2xl border border-purple-100 bg-white p-6 shadow-sm shadow-purple-100/60">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest text-[#6200e2]">
@@ -115,6 +211,15 @@ export default function Central() {
           </div>
         </header>
 
+        {erroAcao && (
+          <div
+            role="alert"
+            className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+          >
+            {erroAcao}
+          </div>
+        )}
+
         {carregando ? (
           <div className="flex flex-col items-center justify-center py-24 text-purple-400">
             <div className="h-10 w-10 animate-spin rounded-full border-4 border-purple-200 border-t-[#6200e2]" />
@@ -124,11 +229,11 @@ export default function Central() {
           <div className="rounded-2xl border border-dashed border-purple-200 bg-white py-20 text-center">
             <ShieldCheck className="mx-auto h-12 w-12 text-purple-300" />
             <p className="mt-4 text-lg font-medium text-[#2d0a4e]">
-              Nenhuma liberação registrada
+              Nenhuma liberação ativa
             </p>
             <p className="mt-1 text-sm text-gray-500">
-              Quando um condômino solicitar acesso para um visitante, ele
-              aparecerá aqui.
+              Liberações pendentes ou em visita aparecerão aqui. Concluídas e
+              canceladas ficam no histórico.
             </p>
           </div>
         ) : (
@@ -205,6 +310,12 @@ export default function Central() {
                       )}
                     </div>
                   )}
+
+                  <AcoesLiberacao
+                    liberacao={liberacao}
+                    onAtualizar={atualizarStatus}
+                    atualizando={atualizandoId === liberacao.id}
+                  />
                 </article>
               );
             })}

@@ -15,8 +15,8 @@ import {
 const NAV_ITEMS = [
   { to: "/", label: "Central", icon: LayoutDashboard, enabled: true },
   { to: "/condominos", label: "Condôminos", icon: Users, enabled: true },
-  { to: "/operarios", label: "Operários", icon: HardHat, enabled: false },
-  { to: "/historico", label: "Histórico", icon: History, enabled: false },
+  { to: "/operarios", label: "Operários", icon: HardHat, enabled: true },
+  { to: "/historico", label: "Histórico", icon: History, enabled: true },
   { to: "/configuracoes", label: "Configurações", icon: Settings, enabled: false },
 ];
 
