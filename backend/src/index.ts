@@ -4,10 +4,15 @@ import rotas from "./routes/routes.js";
 import cors from "cors";
 
 const app = express();
+const frontendUrl = process.env.FRONTEND_URL;
+
+if (!frontendUrl) {
+  throw new Error("FRONTEND_URL não está definida.");
+}
 
 app.use(
   cors({
-    orgin: "http://localhost:5173",
+    origin: frontendUrl,
     credentials: true,
   }),
 );
