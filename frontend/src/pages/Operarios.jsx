@@ -10,6 +10,8 @@ import {
   X,
 } from "lucide-react";
 import NavBar from "../components/NavBar";
+import { apiFetch } from "../lib/api";
+import { formatarCPF } from "../lib/formatadores";
 
 const CAMPOS_OBRIGATORIOS = ["nome", "cpf", "email", "senha"];
 
@@ -67,7 +69,7 @@ function ModalNovoOperario({ aberto, onFechar, onCriado }) {
     setErroGeral("");
 
     try {
-      const response = await fetch("http://localhost:8080/api/operario", {
+      const response = await apiFetch("http://localhost:8080/api/operario", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -79,7 +81,7 @@ function ModalNovoOperario({ aberto, onFechar, onCriado }) {
       const dados = await response.json();
 
       if (!response.ok) {
-        setErroGeral(dados.mensage || "Não foi possível cadastrar o operário.");
+        setErroGeral(dados.error || dados.mensage || "Não foi possível cadastrar o operário.");
         return;
       }
 
@@ -164,8 +166,9 @@ function ModalNovoOperario({ aberto, onFechar, onCriado }) {
               <input
                 id="cpf-operario"
                 type="text"
+                inputMode="numeric"
                 value={form.cpf}
-                onChange={(e) => atualizarCampo("cpf", e.target.value)}
+                onChange={(e) => atualizarCampo("cpf", formatarCPF(e.target.value))}
                 className={inputClass("cpf")}
                 placeholder="000.000.000-00"
               />
@@ -258,7 +261,7 @@ export default function Operarios() {
   async function carregarOperarios() {
     setCarregando(true);
     try {
-      const response = await fetch("http://localhost:8080/api/operario", {
+      const response = await apiFetch("http://localhost:8080/api/operario", {
         headers: { authorization: `Bearer ${token}` },
       });
 
@@ -343,14 +346,6 @@ export default function Operarios() {
             <p className="mt-1 text-sm text-gray-500">
               Clique em &quot;Novo operário&quot; para adicionar o primeiro funcionário.
             </p>
-            <button
-              type="button"
-              onClick={() => setModalAberto(true)}
-              className="mt-6 inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#c507ff] to-[#6200e2] px-5 py-2.5 text-sm font-medium text-white"
-            >
-              <Plus className="h-4 w-4" />
-              Novo operário
-            </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">

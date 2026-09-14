@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import {
   AlertCircle,
   CheckCircle2,
-  Settings,
   UserPlus,
 } from "lucide-react";
 import NavBarCondomino from "../components/NavBarCondomino";
+import ConfiguracoesCondomino from "./ConfiguracoesCondomino";
+import { apiFetch } from "../lib/api";
+import { formatarCPF } from "../lib/formatadores";
 
 const TIPOS_VISITANTE = [
   "Visitante",
@@ -27,18 +29,6 @@ const LABELS = {
   cpf_visitante: "CPF do visitante",
   data_hora_expiracao: "Data e hora de expiração",
 };
-
-function ConfiguracoesVazia() {
-  return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-blue-200 bg-white py-24 text-center">
-      <Settings className="h-12 w-12 text-blue-300" />
-      <p className="mt-4 text-lg font-medium text-[#0c2d6b]">Configurações</p>
-      <p className="mt-1 max-w-sm text-sm text-gray-500">
-        Em breve você poderá personalizar suas preferências por aqui.
-      </p>
-    </div>
-  );
-}
 
 function FormularioLiberacao({ idCondomino }) {
   const token = localStorage.getItem("token");
@@ -92,7 +82,7 @@ function FormularioLiberacao({ idCondomino }) {
     setSucesso("");
 
     try {
-      const response = await fetch("http://localhost:8080/api/liberacao", {
+      const response = await apiFetch("http://localhost:8080/api/liberacao", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -215,8 +205,9 @@ function FormularioLiberacao({ idCondomino }) {
           <input
             id="cpf_visitante"
             type="text"
+            inputMode="numeric"
             value={form.cpf_visitante}
-            onChange={(e) => atualizarCampo("cpf_visitante", e.target.value)}
+            onChange={(e) => atualizarCampo("cpf_visitante", formatarCPF(e.target.value))}
             className={inputClass("cpf_visitante")}
             placeholder="000.000.000-00"
           />
@@ -294,7 +285,7 @@ export default function CentralCondomino() {
   useEffect(() => {
     async function carregarUsuario() {
       try {
-        const response = await fetch("http://localhost:8080/api/verification", {
+        const response = await apiFetch("http://localhost:8080/api/verification", {
           headers: { authorization: `Bearer ${token}` },
         });
 
@@ -339,7 +330,7 @@ export default function CentralCondomino() {
         ) : abaAtiva === "liberacoes" ? (
           <FormularioLiberacao idCondomino={idCondomino} />
         ) : (
-          <ConfiguracoesVazia />
+          <ConfiguracoesCondomino />
         )}
       </main>
     </div>

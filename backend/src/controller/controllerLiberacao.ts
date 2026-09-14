@@ -44,8 +44,12 @@ export const Liberacao = {
 
     async read(req: Request, res: Response) {
         try {
-            const queryTexto: string = `
-            SELECT * FROM liberacao`
+            const operarioNaoAdmin = req.perfil === "operario" && req.admin !== true;
+            const queryTexto: string = operarioNaoAdmin
+                ? `
+                    SELECT * FROM liberacao
+                    WHERE status_entrada IN ('PENDENTE', 'EM_VISITA')`
+                : `SELECT * FROM liberacao`;
 
             const resultado = await pool.query(queryTexto);
             

@@ -20,6 +20,8 @@ declare global {
   namespace Express {
     interface Request {
       userID?: string;
+      perfil?: "operario" | "condomino";
+      admin?: boolean;
     }
   }
 }

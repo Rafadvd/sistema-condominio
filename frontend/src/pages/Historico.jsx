@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ShieldCheck } from "lucide-react";
 import NavBar from "../components/NavBar";
+import { apiFetch } from "../lib/api";
 
 const STATUS_CONFIG = {
   PENDENTE: {
@@ -51,7 +52,7 @@ export default function Historico() {
     async function carregar() {
       setCarregando(true);
       try {
-        const response = await fetch("http://localhost:8080/api/liberacao", {
+        const response = await apiFetch("http://localhost:8080/api/liberacao", {
           headers: { authorization: `Bearer ${token}` },
         });
 

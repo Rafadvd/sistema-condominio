@@ -10,6 +10,8 @@ import {
   X,
 } from "lucide-react";
 import NavBar from "../components/NavBar";
+import { apiFetch } from "../lib/api";
+import { formatarCPF, formatarTelefone } from "../lib/formatadores";
 
 const CAMPOS_OBRIGATORIOS = ["lote", "nome", "cpf", "telefone", "senha"];
 
@@ -68,7 +70,7 @@ function ModalNovoCondomino({ aberto, onFechar, onCriado }) {
     setErroGeral("");
 
     try {
-      const response = await fetch("http://localhost:8080/api/condomino", {
+      const response = await apiFetch("http://localhost:8080/api/condomino", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -182,8 +184,9 @@ function ModalNovoCondomino({ aberto, onFechar, onCriado }) {
               <input
                 id="cpf"
                 type="text"
+                inputMode="numeric"
                 value={form.cpf}
-                onChange={(e) => atualizarCampo("cpf", e.target.value)}
+                onChange={(e) => atualizarCampo("cpf", formatarCPF(e.target.value))}
                 className={inputClass("cpf")}
                 placeholder="000.000.000-00"
               />
@@ -199,8 +202,9 @@ function ModalNovoCondomino({ aberto, onFechar, onCriado }) {
               <input
                 id="telefone"
                 type="text"
+                inputMode="numeric"
                 value={form.telefone}
-                onChange={(e) => atualizarCampo("telefone", e.target.value)}
+                onChange={(e) => atualizarCampo("telefone", formatarTelefone(e.target.value))}
                 className={inputClass("telefone")}
                 placeholder="(00) 00000-0000"
               />
@@ -261,7 +265,7 @@ export default function Condominos() {
   async function carregarCondominos() {
     setCarregando(true);
     try {
-      const response = await fetch("http://localhost:8080/api/condomino", {
+      const response = await apiFetch("http://localhost:8080/api/condomino", {
         headers: { authorization: `Bearer ${token}` },
       });
 

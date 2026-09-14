@@ -2,6 +2,7 @@ import { User, Lock, AlertCircle } from "lucide-react";
 import BackGround from "../components/BackGround";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { formatarCPF } from "../lib/formatadores";
 
 function LoginCondomino() {
   const [cpf, setCpf] = useState("");
@@ -95,10 +96,11 @@ function LoginCondomino() {
             <input
               type="text"
               id="cpf-condomino"
+              inputMode="numeric"
               placeholder=" "
               value={cpf}
               onChange={(event) => {
-                setCpf(event.target.value);
+                setCpf(formatarCPF(event.target.value));
                 if (errosCampos.cpf || erroGeral) {
                   setErrosCampos((prev) => ({ ...prev, cpf: "" }));
                   setErroGeral("");

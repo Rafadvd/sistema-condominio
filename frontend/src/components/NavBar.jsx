@@ -11,13 +11,14 @@ import {
   X,
   Shield,
 } from "lucide-react";
+import { usuarioEhAdmin } from "../lib/api";
 
 const NAV_ITEMS = [
   { to: "/", label: "Central", icon: LayoutDashboard, enabled: true },
   { to: "/condominos", label: "Condôminos", icon: Users, enabled: true },
-  { to: "/operarios", label: "Operários", icon: HardHat, enabled: true },
-  { to: "/historico", label: "Histórico", icon: History, enabled: true },
-  { to: "/configuracoes", label: "Configurações", icon: Settings, enabled: false },
+  { to: "/operarios", label: "Operários", icon: HardHat, enabled: true, apenasAdmin: true },
+  { to: "/historico", label: "Histórico", icon: History, enabled: true, apenasAdmin: true },
+  { to: "/configuracoes", label: "Configurações", icon: Settings, enabled: true },
 ];
 
 function NavItem({ item, onNavigate }) {
@@ -63,6 +64,7 @@ function NavItem({ item, onNavigate }) {
 export default function NavBar() {
   const [aberta, setAberta] = useState(false);
   const navigate = useNavigate();
+  const ehAdmin = usuarioEhAdmin();
 
   function fecharMenu() {
     setAberta(false);
@@ -123,7 +125,7 @@ export default function NavBar() {
           <p className="mb-2 px-3 text-[11px] font-semibold uppercase tracking-widest text-purple-400/60">
             Menu
           </p>
-          {NAV_ITEMS.map((item) => (
+          {NAV_ITEMS.filter((item) => !item.apenasAdmin || ehAdmin).map((item) => (
             <NavItem key={item.label} item={item} onNavigate={fecharMenu} />
           ))}
         </nav>

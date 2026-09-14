@@ -3,6 +3,8 @@ import jwt from 'jsonwebtoken';
 
 interface IPayload {
   sub: string;
+  perfil?: "operario" | "condomino";
+  admin?: boolean;
 }
 
 export function ensureAuthenticated(req: Request,res: Response,next: NextFunction) {
@@ -28,9 +30,21 @@ export function ensureAuthenticated(req: Request,res: Response,next: NextFunctio
     const decoded = jwt.verify(token, secret) as IPayload;
 
     req.userID = decoded.sub;
+    if (decoded.perfil) req.perfil = decoded.perfil;
+    if (decoded.admin !== undefined) req.admin = decoded.admin;
 
     return next();
   } catch {
     return res.status(401).json({ error: 'Token inválido ou expirado' });
   }
 };
+
+export function ensureOperarioAdmin(req: Request, res: Response, next: NextFunction) {
+  if (req.perfil !== "operario" || req.admin !== true) {
+    return res.status(403).json({
+      error: "Apenas administradores da portaria podem cadastrar operários.",
+    });
+  }
+
+  return next();
+}

@@ -5,23 +5,32 @@ import senhaHash from "../password/password.js";
 //CRUD dos operarios
 
 export const Operario = {
-    async create(req: Request<{},{}, { nome: string; cpf: string; email: string; senha: string, admin: boolean}>, res: Response) {
+    async create(req: Request<{}, {}, { nome?: unknown; cpf?: unknown; email?: unknown; senha?: unknown; admin?: unknown }>, res: Response) {
+        const nome = typeof req.body.nome === "string" ? req.body.nome.trim() : "";
+        const cpf = typeof req.body.cpf === "string" ? req.body.cpf.trim() : "";
+        const email = typeof req.body.email === "string" ? req.body.email.trim().toLowerCase() : "";
+        const senha = typeof req.body.senha === "string" ? req.body.senha : "";
+        const admin = req.body.admin === true;
 
-        console.log(req.body)
-
-        const nome: string = req.body.nome;
-        const cpf: string = req.body.cpf;
-        const email: string = req.body.email;
-        const senha: string = req.body.senha;
-        const admin: boolean = req.body.admin;
-        
-        const senhaComHash = await senhaHash(senha)
+        if (!nome || !cpf || !email || !senha) {
+            return res.status(400).json({ error: "Preencha nome, CPF, e-mail e senha." });
+        }
+        if (nome.length > 100 || !/^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/.test(cpf)) {
+            return res.status(400).json({ error: "Informe um nome e CPF válidos." });
+        }
+        if (email.length > 100 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            return res.status(400).json({ error: "Informe um e-mail válido." });
+        }
+        if (senha.length < 6) {
+            return res.status(400).json({ error: "A senha deve ter pelo menos 6 caracteres." });
+        }
 
         try {
+            const senhaComHash = await senhaHash(senha);
             const queryTexto: string = `
             INSERT INTO operario (nome, cpf, email, senha_hash, admin_bool)
             VALUES ($1, $2, $3, $4, $5)
-            RETURNING *`;
+            RETURNING id, nome, cpf, email, admin_bool`;
             
             const resultado = await pool.query(queryTexto, [nome, cpf, email, senhaComHash, admin]);
             const novoOperario = resultado.rows[0];
@@ -30,7 +39,11 @@ export const Operario = {
         } catch (erro) {
             console.error(erro);
 
-            return res.status(500).json({ mensage: "Erro interno ao criar operario" })
+            if ((erro as { code?: string }).code === "23505") {
+                return res.status(409).json({ error: "Já existe um operário com este CPF ou e-mail." });
+            }
+
+            return res.status(500).json({ error: "Erro interno ao criar operário." })
         }
     },
 

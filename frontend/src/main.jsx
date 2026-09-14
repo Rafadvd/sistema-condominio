@@ -8,7 +8,9 @@ import Condominos from "./pages/Condominos.jsx";
 import Operarios from "./pages/Operarios.jsx";
 import Historico from "./pages/Historico.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import AdminRoute from "./components/AdminRoute.jsx";
 import LoginCondomino from "./pages/LoginCondomino.jsx";
+import ConfiguracoesOperario from "./pages/ConfiguracoesOperario.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -32,7 +34,9 @@ const router = createBrowserRouter([
     path: "/operarios",
     element: (
       <ProtectedRoute redirectTo="/loginOperario">
-        <Operarios />
+        <AdminRoute>
+          <Operarios />
+        </AdminRoute>
       </ProtectedRoute>
     ),
   },
@@ -40,7 +44,17 @@ const router = createBrowserRouter([
     path: "/historico",
     element: (
       <ProtectedRoute redirectTo="/loginOperario">
-        <Historico />
+        <AdminRoute>
+          <Historico />
+        </AdminRoute>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/configuracoes",
+    element: (
+      <ProtectedRoute redirectTo="/loginOperario">
+        <ConfiguracoesOperario />
       </ProtectedRoute>
     ),
   },
