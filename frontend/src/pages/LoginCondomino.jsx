@@ -3,6 +3,7 @@ import BackGround from "../components/BackGround";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { formatarCPF } from "../lib/formatadores";
+import { apiUrl } from "../lib/api";
 
 function LoginCondomino() {
   const [cpf, setCpf] = useState("");
@@ -27,7 +28,7 @@ function LoginCondomino() {
     setErroGeral("");
 
     try {
-      const response = await fetch("http://localhost:8080/api/loginCondomino", {
+      const response = await fetch(apiUrl("/api/loginCondomino"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dados),

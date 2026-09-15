@@ -102,7 +102,7 @@ Pré-requisitos: Node.js e PostgreSQL instalados.
 ```
  
 4. Configure as variáveis de ambiente
-   Crie um arquivo `.env` na pasta `backend` com as variáveis do banco de dados e do JWT (veja a seção Variáveis de Ambiente abaixo).
+   Crie arquivos `.env` nas pastas `backend` e `frontend` a partir dos respectivos arquivos `.env.example` (veja a seção Variáveis de Ambiente abaixo).
 5. Execute o script SQL
    Rode o script localizado em `/sql` no seu banco PostgreSQL para criar as tabelas `operario`, `condomino` e `liberacao`.
 6. Inicie o back-end
@@ -119,7 +119,7 @@ Pré-requisitos: Node.js e PostgreSQL instalados.
  
 ## Variáveis de Ambiente
  
-Crie um arquivo `.env` na pasta `backend` com as seguintes variáveis:
+Crie `backend/.env` com as seguintes variáveis:
  
 ```env
 DATABASE_USER=
@@ -129,7 +129,16 @@ DATABASE_PASSWORD=
 DATABASE_PORT=
 PORT=
 JWT_SECRET=
+FRONTEND_URL=http://localhost:5173
 ```
+
+Crie `frontend/.env` com a URL pública da API:
+
+```env
+VITE_API_URL=http://localhost:8080
+```
+
+Em produção, substitua os valores locais pelos domínios publicados. Por exemplo, `VITE_API_URL=https://api.exemplo.com` e `FRONTEND_URL=https://app.exemplo.com`.
  
 ## Scripts Disponíveis
  
@@ -161,4 +170,3 @@ Desenvolvido por Rafael David de Mattos
  
 Linkedin: https://www.linkedin.com/in/rafaeldvdmattos/
 Github: https://github.com/Rafadvd/
- 

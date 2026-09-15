@@ -10,7 +10,7 @@ import {
   X,
 } from "lucide-react";
 import NavBar from "../components/NavBar";
-import { apiFetch } from "../lib/api";
+import { apiFetch, apiUrl } from "../lib/api";
 import { formatarCPF } from "../lib/formatadores";
 
 const CAMPOS_OBRIGATORIOS = ["nome", "cpf", "email", "senha"];
@@ -69,7 +69,7 @@ function ModalNovoOperario({ aberto, onFechar, onCriado }) {
     setErroGeral("");
 
     try {
-      const response = await apiFetch("http://localhost:8080/api/operario", {
+      const response = await apiFetch(apiUrl("/api/operario"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -261,7 +261,7 @@ export default function Operarios() {
   async function carregarOperarios() {
     setCarregando(true);
     try {
-      const response = await apiFetch("http://localhost:8080/api/operario", {
+      const response = await apiFetch(apiUrl("/api/operario"), {
         headers: { authorization: `Bearer ${token}` },
       });
 

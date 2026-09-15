@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import NavBarCondomino from "../components/NavBarCondomino";
 import ConfiguracoesCondomino from "./ConfiguracoesCondomino";
-import { apiFetch } from "../lib/api";
+import { apiFetch, apiUrl } from "../lib/api";
 import { formatarCPF } from "../lib/formatadores";
 
 const TIPOS_VISITANTE = [
@@ -82,7 +82,7 @@ function FormularioLiberacao({ idCondomino }) {
     setSucesso("");
 
     try {
-      const response = await apiFetch("http://localhost:8080/api/liberacao", {
+      const response = await apiFetch(apiUrl("/api/liberacao"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -285,7 +285,7 @@ export default function CentralCondomino() {
   useEffect(() => {
     async function carregarUsuario() {
       try {
-        const response = await apiFetch("http://localhost:8080/api/verification", {
+        const response = await apiFetch(apiUrl("/api/verification"), {
           headers: { authorization: `Bearer ${token}` },
         });
 

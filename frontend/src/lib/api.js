@@ -2,6 +2,16 @@ function rotaLoginAtual() {
   return window.location.pathname.startsWith("/condomino") ? "/login" : "/loginOperario";
 }
 
+const baseUrlApi = import.meta.env.VITE_API_URL?.replace(/\/+$/, "");
+
+export function apiUrl(caminho) {
+  if (!baseUrlApi) {
+    throw new Error("Defina VITE_API_URL para conectar o front-end à API.");
+  }
+
+  return `${baseUrlApi}${caminho.startsWith("/") ? caminho : `/${caminho}`}`;
+}
+
 export function dadosDoToken() {
   const token = localStorage.getItem("token");
   if (!token) return null;

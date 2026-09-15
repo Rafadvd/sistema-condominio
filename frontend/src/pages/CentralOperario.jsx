@@ -10,7 +10,7 @@ import {
   XCircle,
 } from "lucide-react";
 import NavBar from "../components/NavBar";
-import { apiFetch } from "../lib/api";
+import { apiFetch, apiUrl } from "../lib/api";
 
 const STATUS_ATIVOS = ["PENDENTE", "EM_VISITA"];
 
@@ -110,7 +110,7 @@ export default function Central() {
 
   const api_liberacao = useCallback(async () => {
     try {
-      const response = await apiFetch("http://localhost:8080/api/liberacao", {
+      const response = await apiFetch(apiUrl("/api/liberacao"), {
         method: "GET",
         headers: {
           authorization: `Bearer ${token}`,
@@ -146,7 +146,7 @@ export default function Central() {
     setErroAcao("");
 
     try {
-      const response = await apiFetch("http://localhost:8080/api/liberacao", {
+      const response = await apiFetch(apiUrl("/api/liberacao"), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

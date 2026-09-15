@@ -3,6 +3,7 @@ import BackGround from "../components/BackGround";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { formatarCPF } from "../lib/formatadores";
+import { apiUrl } from "../lib/api";
 
 function LoginOperario() {
   const [cpf, setCpf] = useState("");
@@ -27,7 +28,7 @@ function LoginOperario() {
     setErroGeral("");
 
     try {
-      const response = await fetch("http://localhost:8080/api/loginOperario", {
+      const response = await fetch(apiUrl("/api/loginOperario"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dados),

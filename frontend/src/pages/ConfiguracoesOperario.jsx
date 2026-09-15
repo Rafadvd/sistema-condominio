@@ -1,5 +1,6 @@
 import NavBar from "../components/NavBar";
 import ConfiguracoesCondomino from "./ConfiguracoesCondomino";
+import { apiUrl } from "../lib/api";
 
 export default function ConfiguracoesOperario() {
   return (
@@ -11,7 +12,7 @@ export default function ConfiguracoesOperario() {
           <h1 className="mt-1 text-3xl font-bold text-[#2d0a4e]">Configurações</h1>
           <p className="mt-2 max-w-xl text-sm text-gray-500">Gerencie as configurações da sua conta.</p>
         </header>
-        <ConfiguracoesCondomino apiUrl="http://localhost:8080/api/operario/senha" tema="roxo" />
+        <ConfiguracoesCondomino apiUrl={apiUrl("/api/operario/senha")} tema="roxo" />
       </main>
     </div>
   );

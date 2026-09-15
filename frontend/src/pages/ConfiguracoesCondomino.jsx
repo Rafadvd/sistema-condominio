@@ -7,10 +7,10 @@ import {
   KeyRound,
   LockKeyhole,
 } from "lucide-react";
-import { apiFetch } from "../lib/api";
+import { apiFetch, apiUrl as montarApiUrl } from "../lib/api";
 
 export default function ConfiguracoesCondomino({
-  apiUrl = "http://localhost:8080/api/condomino/senha",
+  apiUrl = montarApiUrl("/api/condomino/senha"),
   tema = "azul",
 }) {
   const [form, setForm] = useState({

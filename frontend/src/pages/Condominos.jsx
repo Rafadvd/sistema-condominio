@@ -10,7 +10,7 @@ import {
   X,
 } from "lucide-react";
 import NavBar from "../components/NavBar";
-import { apiFetch } from "../lib/api";
+import { apiFetch, apiUrl } from "../lib/api";
 import { formatarCPF, formatarTelefone } from "../lib/formatadores";
 
 const CAMPOS_OBRIGATORIOS = ["lote", "nome", "cpf", "telefone", "senha"];
@@ -70,7 +70,7 @@ function ModalNovoCondomino({ aberto, onFechar, onCriado }) {
     setErroGeral("");
 
     try {
-      const response = await apiFetch("http://localhost:8080/api/condomino", {
+      const response = await apiFetch(apiUrl("/api/condomino"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -265,7 +265,7 @@ export default function Condominos() {
   async function carregarCondominos() {
     setCarregando(true);
     try {
-      const response = await apiFetch("http://localhost:8080/api/condomino", {
+      const response = await apiFetch(apiUrl("/api/condomino"), {
         headers: { authorization: `Bearer ${token}` },
       });
 
