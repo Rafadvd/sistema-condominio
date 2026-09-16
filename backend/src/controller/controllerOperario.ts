@@ -12,19 +12,6 @@ export const Operario = {
         const senha = typeof req.body.senha === "string" ? req.body.senha : "";
         const admin = req.body.admin === true;
 
-        if (!nome || !cpf || !email || !senha) {
-            return res.status(400).json({ error: "Preencha nome, CPF, e-mail e senha." });
-        }
-        if (nome.length > 100 || !/^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/.test(cpf)) {
-            return res.status(400).json({ error: "Informe um nome e CPF válidos." });
-        }
-        if (email.length > 100 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            return res.status(400).json({ error: "Informe um e-mail válido." });
-        }
-        if (senha.length < 6) {
-            return res.status(400).json({ error: "A senha deve ter pelo menos 6 caracteres." });
-        }
-
         try {
             const senhaComHash = await senhaHash(senha);
             const queryTexto: string = `

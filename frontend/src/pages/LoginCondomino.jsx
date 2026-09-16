@@ -67,7 +67,7 @@ function LoginCondomino() {
       <BackGround variant="blue" />
 
       <div className="relative w-full max-w-sm rounded-2xl border border-blue-100 bg-[#f0f7ff] px-10 pb-12 pt-10 shadow-2xl shadow-blue-900/20">
-        <img className="mx-auto h-32 pb-2" src="../../public/logo.png" alt="Logo" />
+        <img className="mx-auto h-32 pb-2" src="../../logo.png" alt="Logo" />
 
         <p className="mb-1 flex justify-center text-xs font-semibold uppercase tracking-widest text-blue-600">
           Área do condômino

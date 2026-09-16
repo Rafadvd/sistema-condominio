@@ -67,7 +67,7 @@ function LoginOperario() {
       <BackGround />
 
       <div className="relative w-full max-w-sm rounded-2xl bg-[#f4f3ef] px-10 pb-12 pt-10 shadow-2xl">
-        <img className="mx-auto h-40 pb-2" src="../../public/logo.png" alt="Logo" />
+        <img className="mx-auto h-40 pb-2" src="../../logo.png" alt="Logo" />
         <h1 className="flex justify-center pb-2 text-3xl font-bold text-[#2d0a4e]">
           Bem-vindo de volta
         </h1>
